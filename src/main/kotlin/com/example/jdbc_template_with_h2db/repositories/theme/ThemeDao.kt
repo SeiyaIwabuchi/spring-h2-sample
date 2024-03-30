@@ -85,15 +85,17 @@ class ThemeDao(
     /**
      *
      */
-    fun updete(entity: ThemeEntity): ThemeEntity {
+    fun update(entity: ThemeEntity): ThemeEntity {
         val params = MapSqlParameterSource().apply {
             addValue(Columns.theme_id.name, entity.themeId.toString())
+            addValue(Columns.title.name, entity.title)
+            addValue(Columns.body.name, entity.body)
         }
 
         val sql = """
             update ${Tables.theme_entity.name}
             set ${Columns.title.name} = :${Columns.title.name},
-            ${Columns.title.name} = :${Columns.body.name}
+            ${Columns.body.name} = :${Columns.body.name}
             where ${Columns.theme_id.name} = :${Columns.theme_id.name}
         """.trimIndent()
 

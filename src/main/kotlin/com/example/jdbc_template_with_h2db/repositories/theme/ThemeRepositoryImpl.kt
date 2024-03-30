@@ -13,7 +13,7 @@ class ThemeRepositoryImpl(
 ) : ThemeRepository {
     override fun <S : ThemeEntity> save(entity: S): S {
         return entity.themeId?.let {
-            _themeDao.updete(entity) as S
+            _themeDao.update(entity) as S
         } ?: let {
             _themeDao.save(entity.copy(themeId = UUID.randomUUID())) as S
         }

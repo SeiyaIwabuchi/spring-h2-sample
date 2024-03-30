@@ -42,7 +42,11 @@ class ThemeDao(
             addValue(Columns.theme_id.name, id.toString())
         }
 
-        val sql = """ /* 自力で実装してみましょう */ """.trimIndent()
+        val sql = """
+            select *
+            from ${Tables.theme_entity.name}
+            where ${Columns.theme_id.name} = :${Columns.theme_id.name}
+        """.trimIndent()
 
         return _jdbc.query(sql, params, _rowMapper)
     }
@@ -53,7 +57,10 @@ class ThemeDao(
     fun findAll(): List<ThemeEntity> {
         val params = MapSqlParameterSource()
 
-        val sql = """ /* 自力で実装してみましょう */ """.trimIndent()
+        val sql = """
+            select *
+            from ${Tables.theme_entity.name}
+        """.trimIndent()
 
         return _jdbc.query(sql, params, _rowMapper)
     }
@@ -61,14 +68,39 @@ class ThemeDao(
     /**
      *
      */
-    fun delete(entity: ThemeEntity) {
-        // 自力で実装してみましょう
+    fun deleteById(id: UUID) {
+        val params = MapSqlParameterSource().apply {
+            addValue(Columns.theme_id.name, id.toString())
+        }
+
+        val sql = """
+            delete
+            from ${Tables.theme_entity.name}
+            where ${Columns.theme_id.name} = :${Columns.theme_id.name}
+        """.trimIndent()
+
+        _jdbc.update(sql, params)
     }
 
     /**
      *
      */
-    // 更新用のメソッドを定義しましょう
+    fun updete(entity: ThemeEntity): ThemeEntity {
+        val params = MapSqlParameterSource().apply {
+            addValue(Columns.theme_id.name, entity.themeId.toString())
+        }
+
+        val sql = """
+            update ${Tables.theme_entity.name}
+            set ${Columns.title.name} = :${Columns.title.name},
+            ${Columns.title.name} = :${Columns.body.name}
+            where ${Columns.theme_id.name} = :${Columns.theme_id.name}
+        """.trimIndent()
+
+        _jdbc.update(sql, params)
+
+        return entity
+    }
 
     // ----
 

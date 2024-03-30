@@ -5,14 +5,18 @@ import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
 import java.util.*
 
-interface ThemeRepository: CrudRepository<ThemeEntity, UUID>
+interface ThemeRepository : CrudRepository<ThemeEntity, UUID>
 
 @Repository
 class ThemeRepositoryImpl(
     private val _themeDao: ThemeDao
-): ThemeRepository {
+) : ThemeRepository {
     override fun <S : ThemeEntity> save(entity: S): S {
-        return _themeDao.save(entity.copy(themeId = UUID.randomUUID())) as S
+        return entity.themeId?.let {
+            _themeDao.updete(entity) as S
+        } ?: let {
+            _themeDao.save(entity.copy(themeId = UUID.randomUUID())) as S
+        }
     }
 
     override fun <S : ThemeEntity?> saveAll(entities: MutableIterable<S>): MutableIterable<S> {
@@ -48,11 +52,11 @@ class ThemeRepositoryImpl(
     }
 
     override fun delete(entity: ThemeEntity) {
-        _themeDao.delete(entity)
+        TODO("Not yet implemented")
     }
 
     override fun deleteById(id: UUID) {
-        TODO("Not yet implemented")
+        _themeDao.deleteById(id)
     }
 
     override fun findAllById(ids: MutableIterable<UUID>): MutableIterable<ThemeEntity> {
